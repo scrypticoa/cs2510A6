@@ -7,7 +7,7 @@ interface IArith {
 class Const implements IArith {
   double num;
   
-  public <R>R accept(IArithVisitor<R> visitor) {
+  public <R> R accept(IArithVisitor<R> visitor) {
     return visitor.apply(this);
   }
 }
@@ -54,4 +54,20 @@ interface IArithVisitor<R> {
   R apply(Const arith);
   R apply(UnaryFormula arith);
   R apply(BinaryFormula arith);
+}
+
+class EvalVisitor implements IArithVisitor<Double> {
+  public Double apply(Const arith) {
+    return arith.num;
+  }
+  
+  public Double apply(UnaryFormula arith) {
+    return arith.func.apply(arith.child.accept(this));
+  }
+
+  public Double apply(BinaryFormula arith) {
+    return arith.func.apply(
+        arith.left.accept(this),
+        arith.left.accept(this));
+  }
 }
