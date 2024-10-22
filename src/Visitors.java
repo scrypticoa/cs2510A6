@@ -184,3 +184,17 @@ class MirrorVisitor implements IArithVisitor<IArith> {
     return new BinaryFormula (arith.func, arith.name, arith.right, arith.left);
   }
 }
+
+class MirrorVisitor implements IArithVisitor<IArith> {
+  public IArith apply(Const arith) {
+    return arith;
+  }
+  
+  public IArith apply(UnaryFormula arith) {
+    return arith;
+  }
+
+  public IArith apply(BinaryFormula arith) {
+    return new BinaryFormula (arith.func, arith.name, arith.right, arith.left);
+  }
+}
