@@ -6,3 +6,5 @@
 /Square.class
 /EvalVisitor.class
 /MirrorVisitor.class
+/AllEvenVisitor.class
+/PrintVisitor.class

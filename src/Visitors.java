@@ -152,22 +152,17 @@ class PrintVisitor implements IArithVisitor<String> {
   }
 }
 
-class AllEvenVisitor implements IArithVisitor<String> {
-  public String apply(Const arith) {
-    return Double.toString(arith.num);
+class AllEvenVisitor implements IArithVisitor<Boolean> {
+  public Boolean apply(Const arith) {
+    return arith.num % 2 == 0;
   }
   
-  public String apply(UnaryFormula arith) {
-    return 
-        "(" + arith.name + " " +
-        arith.childAccept(this) + ")";
+  public Boolean apply(UnaryFormula arith) {
+    return arith.childAccept(this);
   }
 
-  public String apply(BinaryFormula arith) {
-    return 
-        "(" + arith.name + " " +
-        arith.leftAccept(this) + " " +
-        arith.rightAccept(this) + ")";
+  public Boolean apply(BinaryFormula arith) {
+    return arith.leftAccept(this) && arith.rightAccept(this);
   }
 }
 
@@ -185,16 +180,3 @@ class MirrorVisitor implements IArithVisitor<IArith> {
   }
 }
 
-class MirrorVisitor implements IArithVisitor<IArith> {
-  public IArith apply(Const arith) {
-    return arith;
-  }
-  
-  public IArith apply(UnaryFormula arith) {
-    return arith;
-  }
-
-  public IArith apply(BinaryFormula arith) {
-    return new BinaryFormula (arith.func, arith.name, arith.right, arith.left);
-  }
-}
