@@ -1,15 +1,22 @@
-interface Arith {
+import java.util.function.*;
+
+interface IArith {
   
 }
 
-class Const implements Arith {
-  
+class Const implements IArith {
+  double num;
 }
 
-class UnaryFormula implements Arith {
-  
+class UnaryFormula implements IArith {
+  Function<Double, Double> func;
+  String name;
+  IArith child;
 }
 
-class BinaryFormula implements Arith {
-  
+class BinaryFormula implements IArith {
+  BiFunction <Double, Double, Double> func;
+  String name;
+  IArith left;
+  IArith right;
 }
