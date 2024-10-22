@@ -26,6 +26,10 @@ class UnaryFormula implements IArith {
   public <R> R accept(IArithVisitor<R> visitor) {
     return visitor.apply(this);
   }
+  
+  public <R> R childAccept(IArithVisitor<R> visitor) {
+    return this.child.accept(visitor);
+  }
 }
 
 class Negation extends UnaryFormula {
@@ -61,6 +65,14 @@ class BinaryFormula implements IArith {
 
   public <R> R accept(IArithVisitor<R> visitor) {
     return visitor.apply(this);
+  }
+  
+  public <R> R leftAccept(IArithVisitor<R> visitor) {
+    return this.left.accept(visitor);
+  }
+  
+  public <R> R rightAccept(IArithVisitor<R> visitor) {
+    return this.right.accept(visitor);
   }
 }
 
@@ -111,12 +123,64 @@ class EvalVisitor implements IArithVisitor<Double> {
   }
   
   public Double apply(UnaryFormula arith) {
-    return arith.func.apply(arith.child.accept(this));
+    return arith.func.apply(arith.childAccept(this));
   }
 
   public Double apply(BinaryFormula arith) {
     return arith.func.apply(
-        arith.left.accept(this),
-        arith.left.accept(this));
+        arith.leftAccept(this),
+        arith.rightAccept(this));
+  }
+}
+
+class PrintVisitor implements IArithVisitor<String> {
+  public String apply(Const arith) {
+    return Double.toString(arith.num);
+  }
+  
+  public String apply(UnaryFormula arith) {
+    return 
+        "(" + arith.name + " " +
+        arith.childAccept(this) + ")";
+  }
+
+  public String apply(BinaryFormula arith) {
+    return 
+        "(" + arith.name + " " +
+        arith.leftAccept(this) + " " +
+        arith.rightAccept(this) + ")";
+  }
+}
+
+class AllEvenVisitor implements IArithVisitor<String> {
+  public String apply(Const arith) {
+    return Double.toString(arith.num);
+  }
+  
+  public String apply(UnaryFormula arith) {
+    return 
+        "(" + arith.name + " " +
+        arith.childAccept(this) + ")";
+  }
+
+  public String apply(BinaryFormula arith) {
+    return 
+        "(" + arith.name + " " +
+        arith.leftAccept(this) + " " +
+        arith.rightAccept(this) + ")";
+  }
+}
+
+class MirrorVisitor implements IArithVisitor<IArith> {
+  public IArith apply(Const arith) {
+    return arith;
+  }
+  
+  public IArith apply(UnaryFormula arith) {
+    return arith;
+  }
+
+  public IArith apply(BinaryFormula arith) {
+    return new BinaryFormula (arith.func, arith.name, arith.right, arith.left);
   }
 }
