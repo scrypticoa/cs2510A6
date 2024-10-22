@@ -20,3 +20,7 @@ class BinaryFormula implements IArith {
   IArith left;
   IArith right;
 }
+
+interface IArithVisitor<R> {
+  R apply(IArith arith);
+}
