@@ -4,3 +4,5 @@
 /Subtraction.class
 /Negation.class
 /Square.class
+/EvalVisitor.class
+/MirrorVisitor.class
