@@ -1,11 +1,12 @@
 import java.util.function.*;
 
 interface IArith {
-  
+  <R> R accept(IArithVisitor<R> visitor);
 }
 
 class Const implements IArith {
   double num;
+  
 }
 
 class UnaryFormula implements IArith {
@@ -22,5 +23,7 @@ class BinaryFormula implements IArith {
 }
 
 interface IArithVisitor<R> {
-  R apply(IArith arith);
+  R apply(Const arith);
+  R apply(UnaryFormula arith);
+  R apply(BinaryFormula arith);
 }
