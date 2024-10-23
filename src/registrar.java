@@ -18,6 +18,10 @@ class ConsList<T> implements IList<T>{
     this.first = first;
     this.rest = rest;
   }
+  
+  public <R> R fold(BiFunction<R, T, R> func, R val) {
+    return func.apply(val, first);
+  }
 }
 
 class Course{
@@ -53,10 +57,6 @@ class Student{
   Student (String name, int id){
     this.name = name;
     this.id = id;
-  }
-  
-  public <R> R fold(BiFunction<R, T, R> func, R val) {
-    return func.apply(val, first);
   }
 }
 
