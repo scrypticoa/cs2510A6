@@ -60,6 +60,7 @@ class Course {
   
   boolean sameProf(Course c) {
     return this.prof.equals(c.prof);
+  }
 }
 
 class Instructor {
