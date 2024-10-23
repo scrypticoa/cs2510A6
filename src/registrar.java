@@ -1,16 +1,16 @@
-interface IList<T> {}
+import java.util.function.*;
 
-class MtLoList<T> {
-  T first;
-  IList<T> rest;
-  
-  public MtLoList(T first, IList<T> rest) {
-    this.first = first;
-    this.rest = rest;
+interface IList<T> {
+  <R> R fold(BiFunction<R, T, R> func, R val);
+}
+
+class MtLoList<T> implements IList<T> {
+  public <R> R fold(BiFunction<R, T, R> func, R val) {
+    return val;
   }
 }
 
-class ConsLoList<T> {
+class ConsLoList<T> implements IList<T> {
   T first;
   IList<T> rest;
   
@@ -18,4 +18,9 @@ class ConsLoList<T> {
     this.first = first;
     this.rest = rest;
   }
+  
+  public <R> R fold(BiFunction<R, T, R> func, R val) {
+    return func.apply(val, first);
+  }
 }
+
