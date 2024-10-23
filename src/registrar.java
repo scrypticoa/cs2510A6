@@ -33,6 +33,10 @@ class Course{
     this.name = name;
     this.prof = prof;
   }
+  
+  boolean equals(Course other) {
+    return this.name.equals(other.name);
+  }
 }
 
 class Instructor{
@@ -52,11 +56,23 @@ class Instructor{
 class Student{
   String name;
   int id;
-  ConsList <Course> cources;
+  ConsList <Course> courses;
   
   Student (String name, int id){
     this.name = name;
     this.id = id;
+  }
+  
+  boolean classmates(Student c) {
+    return this.courses.fold(
+      (res, course) -> {
+        return res ||
+            c.courses.fold(
+                (res1, course1) -> {
+                  return res1 || course.equals(course1);
+                },
+                false);
+      }, false);
   }
 }
 
