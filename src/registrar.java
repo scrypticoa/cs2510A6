@@ -1,8 +1,13 @@
+import java.util.function.*;
+
 interface IList<T> {
+  <R> R fold(BiFunction<R, T, R> func, R val);
 }
 
 class MtList<T> implements IList<T> {
-
+  public <R> R fold(BiFunction<R, T, R> func, R val) {
+    return val;
+  }
 }
 
 class ConsList<T> implements IList<T> {
@@ -12,6 +17,10 @@ class ConsList<T> implements IList<T> {
   public ConsList(T first, IList<T> rest) {
     this.first = first;
     this.rest = rest;
+  }
+  
+  public <R> R fold(BiFunction<R, T, R> func, R val) {
+    return func.apply(val, first);
   }
 }
 
@@ -60,3 +69,4 @@ class Student {
     c.addStudent(this);
   }
 }
+
