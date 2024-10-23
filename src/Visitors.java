@@ -186,4 +186,3 @@ class MirrorVisitor implements IArithVisitor<IArith> {
         arith.leftAccept(this));
   }
 }
-
