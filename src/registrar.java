@@ -78,11 +78,6 @@ class Student {
                 },
                 false);
       }, false);
-  ConsList<Course> courses;
-
-  Student(String name, int id) {
-    this.name = name;
-    this.id = id;
   }
 
   void enroll(Course c) {
