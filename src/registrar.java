@@ -2,11 +2,17 @@ import java.util.function.*;
 
 interface IList<T> {
   <R> R fold(BiFunction<R, T, R> func, R val);
+  
+  boolean anyCompareMatches(BiPredicate<T, T> compare);
 }
 
 class MtList<T> implements IList<T> {
   public <R> R fold(BiFunction<R, T, R> func, R val) {
     return val;
+  }
+  
+  public boolean anyCompareMatches(BiPredicate<T, T> compare) {
+    return false;
   }
 }
 
@@ -21,6 +27,15 @@ class ConsList<T> implements IList<T> {
   
   public <R> R fold(BiFunction<R, T, R> func, R val) {
     return func.apply(val, first);
+  }
+  
+  public boolean anyCompareMatches(BiPredicate<T, T> compare) {
+    boolean firstMatch = this.rest.fold(
+        (res, element) -> {
+          return res || compare.test(this.first, element);
+        }, false);
+    if (firstMatch) return true;
+    return this.rest.anyCompareMatches(compare);
   }
 }
 
