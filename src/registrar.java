@@ -42,6 +42,9 @@ class Course {
   boolean equals(Course other) {
     return this.name.equals(other.name);
   }
+  
+  boolean sameProf(Course c) {
+    return this.prof.equals(c.prof);
 }
 
 class Instructor {
@@ -56,6 +59,14 @@ class Instructor {
   void newClass(Course c) {
     courses = new ConsList<Course>(c, courses);
   }
+  
+  boolean dejavu(Student s) {
+    return s.dejavu(this);
+  }
+  
+  boolean equals(Instructor i) {
+    return this.name.equals(i.name);
+  }
 }
 
 class Student {
@@ -66,6 +77,13 @@ class Student {
   Student (String name, int id){
     this.name = name;
     this.id = id;
+  }
+  
+  boolean dejavu(Instructor i) {
+    return this.courses.anyCompareMatches(
+        (course1, course2) -> {
+          return course1.sameProf(course2);
+        });
   }
   
   boolean classmates(Student c) {
@@ -85,4 +103,5 @@ class Student {
     c.addStudent(this);
   }
 }
+
 
