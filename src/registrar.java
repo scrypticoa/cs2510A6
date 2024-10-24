@@ -166,7 +166,7 @@ class ExamplesRegistrar {
   Course eng;
   Course his;
 
-  //gives all objescts data
+  // gives all objescts data
   void create() {
     micah = new Student("Micah", 27390);
     jackson = new Student("Jackson", 27140);
@@ -196,6 +196,25 @@ class ExamplesRegistrar {
     daniel.enroll(his);
   }
 
+  // tests the addStudent method
+  boolean testAddStudent(Tester t) {
+    micah = new Student("Micah", 27390);
+    jackson = new Student("Jackson", 27140);
+    razzaq = new Instructor("Razzaq");
+    fundies = new Course("Fundies 2", razzaq);
+
+    boolean res = true;
+    // tests adding a student to an empty list
+    fundies.addStudent(micah);
+    res &= t.checkExpect(fundies.students, new ConsList<Student>(micah, new MtList<Student>()));
+    // tests adding a student to a list with a student
+    fundies.addStudent(jackson);
+    res &= t.checkExpect(fundies.students,
+        new ConsList<Student>(jackson, new ConsList<Student>(micah, new MtList<Student>())));
+
+    return res;
+  }
+
   // tests the Course equals method
   boolean testCourseEquals(Tester t) {
     create();
@@ -216,6 +235,25 @@ class ExamplesRegistrar {
     res &= t.checkExpect(fundies.equals(calc), true);
     // tests couses with diffrent profs
     res &= t.checkExpect(his.equals(calc), false);
+
+    return res;
+  }
+
+  //tests the newClass method
+  boolean testNewClass(Tester t) {
+    boolean res = true;
+    razzaq = new Instructor("Razzaq");
+
+    // calls method in constructor
+    fundies = new Course("Fundies 2", razzaq);
+    // tests adding first class to empty list
+    res &= t.checkExpect(razzaq.courses, new ConsList<Course>(fundies, new MtList<Course>()));
+
+    // calls method in constructor
+    calc = new Course("Calculus", razzaq);
+    // tests adding a course to a non empty list
+    res &= t.checkExpect(razzaq.courses,
+        new ConsList<Course>(calc, new ConsList<Course>(fundies, new MtList<Course>())));
 
     return res;
   }
@@ -244,6 +282,25 @@ class ExamplesRegistrar {
     res &= t.checkExpect(razzaq.equals(razzaq), true);
     // tests with 2 diffrent prof
     res &= t.checkExpect(razzaq.equals(smith), false);
+
+    return res;
+  }
+  
+  //tests the enroll method
+  boolean testEnroll(Tester t) {
+    micah = new Student("Micah", 27390);
+    razzaq = new Instructor("Razzaq");
+    fundies = new Course("Fundies 2", razzaq);
+    calc = new Course("Calculus", razzaq);
+
+    boolean res = true;
+    // tests adding a Course to an empty list
+    micah.enroll(fundies);
+    res &= t.checkExpect(micah.courses, new ConsList<Course>(fundies, new MtList<Course>()));
+    // tests adding a Course to a list with a Course
+    micah.enroll(calc);
+    res &= t.checkExpect(micah.courses,
+        new ConsList<Course>(calc, new ConsList<Course>(fundies, new MtList<Course>())));
 
     return res;
   }
