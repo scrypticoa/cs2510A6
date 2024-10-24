@@ -1,4 +1,3 @@
-import java.nio.channels.spi.AbstractInterruptibleChannel;
 import java.util.function.*;
 import tester.Tester;
 
@@ -38,8 +37,9 @@ class ConsList<T> implements IList<T> {
     boolean firstMatch = this.rest.fold((res, element) -> {
       return res || compare.test(this.first, element);
     }, false);
-    if (firstMatch)
+    if (firstMatch) {
       return true;
+    }
     return this.rest.anyCompareMatches(compare);
   }
 }
@@ -64,15 +64,15 @@ class Course {
     students = new ConsList<Student>(s, students);
   }
 
-  // compares a courses name to another to see if they are the same
-  boolean equals(Course other) {
-    return this.name.equals(other.name);
+  // compares this and other course to see if they are the same
+  boolean sameCourse(Course other) {
+    return this.equals(other);
   }
 
   // compares the names of the Instuctors of 2 courses to see if they are taught
   // by the same Instructor
   boolean sameProf(Course c) {
-    return this.prof.equals(c.prof);
+    return this.prof.sameInstructor(c.prof);
   }
 }
 
@@ -98,9 +98,9 @@ class Instructor {
     return s.dejavu(this);
   }
 
-  // compares the names of instructors to see if they are the same
-  boolean equals(Instructor i) {
-    return this.name.equals(i.name);
+  // compares this and i instructor to see if they are the same
+  boolean sameInstructor(Instructor i) {
+    return this.equals(i);
   }
 }
 
@@ -137,7 +137,7 @@ class Student {
   boolean classmates(Student c) {
     return this.courses.fold((res, course) -> {
       return res || c.courses.fold((res1, course1) -> {
-        return res1 || course.equals(course1);
+        return res1 || course.sameCourse(course1);
       }, false);
     }, false);
   }
@@ -221,9 +221,9 @@ class ExamplesRegistrar {
     create();
     boolean res = true;
     // tests same course
-    res &= t.checkExpect(fundies.equals(fundies), true);
+    res &= t.checkExpect(fundies.sameCourse(fundies), true);
     // tests diffrent courses
-    res &= t.checkExpect(his.equals(calc), false);
+    res &= t.checkExpect(his.sameCourse(calc), false);
 
     return res;
   }
@@ -280,9 +280,9 @@ class ExamplesRegistrar {
     create();
     boolean res = true;
     // tests with same prof
-    res &= t.checkExpect(razzaq.equals(razzaq), true);
+    res &= t.checkExpect(razzaq.sameInstructor(razzaq), true);
     // tests with 2 diffrent prof
-    res &= t.checkExpect(razzaq.equals(smith), false);
+    res &= t.checkExpect(razzaq.sameInstructor(smith), false);
 
     return res;
   }
@@ -372,7 +372,7 @@ class ExamplesRegistrar {
     
     // test duplicates
     
-   boolean dupes = ints.anyCompareMatches((a, b) -> a == b);
+    boolean dupes = ints.anyCompareMatches((a, b) -> a == b);
     
     res &= t.checkExpect(dupes, false);
     
@@ -380,7 +380,7 @@ class ExamplesRegistrar {
     
     boolean signMatches = ints.anyCompareMatches(
         (a, b) -> Integer.signum(a) == Integer.signum(b));
-   
+    
     res &= t.checkExpect(signMatches, true);
     
     return res;
