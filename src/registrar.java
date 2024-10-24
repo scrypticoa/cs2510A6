@@ -1,3 +1,4 @@
+import java.nio.channels.spi.AbstractInterruptibleChannel;
 import java.util.function.*;
 import tester.Tester;
 
@@ -30,7 +31,7 @@ class ConsList<T> implements IList<T> {
   }
 
   public <R> R fold(BiFunction<R, T, R> func, R val) {
-    return func.apply(val, first);
+    return this.rest.fold(func, func.apply(val, first));
   }
 
   public boolean anyCompareMatches(BiPredicate<T, T> compare) {
@@ -116,10 +117,10 @@ class Student {
     courses = new MtList<Course>();
   }
 
-  // puts a course in a students cources and adds them to the courses' student
+  // puts a course in a students courses and adds them to the courses' student
   // list
   void enroll(Course c) {
-    courses = new ConsList<Course>(c, courses);
+    this.courses = new ConsList<Course>(c, this.courses);
     c.addStudent(this);
   }
 
@@ -166,7 +167,7 @@ class ExamplesRegistrar {
   Course eng;
   Course his;
 
-  // gives all objescts data
+  // gives all objects data
   void create() {
     micah = new Student("Micah", 27390);
     jackson = new Student("Jackson", 27140);
@@ -231,10 +232,10 @@ class ExamplesRegistrar {
   boolean testSameProf(Tester t) {
     create();
     boolean res = true;
-    // tests couses with the same prof
-    res &= t.checkExpect(fundies.equals(calc), true);
-    // tests couses with diffrent profs
-    res &= t.checkExpect(his.equals(calc), false);
+    // tests courses with the same prof
+    res &= t.checkExpect(fundies.sameProf(calc), true);
+    // tests courses with different profs
+    res &= t.checkExpect(his.sameProf(calc), false);
 
     return res;
   }
@@ -335,6 +336,53 @@ class ExamplesRegistrar {
     // students that share a class
     res &= t.checkExpect(micah.classmates(jackson), true);
 
+    return res;
+  }
+  
+  // list test
+  
+  boolean testFold(Tester t) {
+    boolean res = true;
+    
+    IList<Integer> ints = new ConsList<Integer>(1,
+        new ConsList<Integer>(2,
+        new MtList<Integer>()));
+    
+    // sum with fold
+    
+    int sum = ints.fold((a, b) -> a + b, 0);
+    
+    res &= t.checkExpect(sum, 3);
+    
+    // print with fold
+    
+    String print = ints.fold((s, a) -> s + a, "");
+    
+    res &= t.checkExpect(print, "12");
+    
+    return res;
+  }
+  
+  boolean testAnyCompareMatches(Tester t) {
+    boolean res = true;
+    
+    IList<Integer> ints = new ConsList<Integer>(1,
+        new ConsList<Integer>(2,
+        new MtList<Integer>()));
+    
+    // test duplicates
+    
+   boolean dupes = ints.anyCompareMatches((a, b) -> a == b);
+    
+    res &= t.checkExpect(dupes, false);
+    
+    // test any same sign
+    
+    boolean signMatches = ints.anyCompareMatches(
+        (a, b) -> Integer.signum(a) == Integer.signum(b));
+   
+    res &= t.checkExpect(signMatches, true);
+    
     return res;
   }
 }
